@@ -5,10 +5,10 @@ var PixiDisplay = {
   scale: 1.5,
   sprites: {},
   init: function(parent, sheet) {
-    renderer = new PIXI.autoDetectRenderer(800, 600, {"antialias": false});
-    parent.appendChild(renderer.view);
     this.stage = new PIXI.Container();
     this.sheet = sheet;
+    renderer = new PIXI.autoDetectRenderer(this._to_x(80), this._to_y(25), {"antialias": false});
+    parent.appendChild(renderer.view);
   },
   draw: function() {
     renderer.render(this.stage);
@@ -62,5 +62,11 @@ var PixiDisplay = {
   },
   _from_y: function(loc) {
     return Math.floor(loc/this.sheet.sh);
-  }
+  },
+  _snap_x: function(loc) {
+    return this._from_x(this._to_x(loc));
+  },
+  _snap_y: function(loc) {
+    return this._from_y(this._to_y(loc));
+  },
 };
