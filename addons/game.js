@@ -5,6 +5,8 @@ var Game = {
 	level: null,
 	display: null,
 	textBuffer: null,
+	pdisplay: null,
+	sheet: null,
 	
 	init: function() {
 		window.addEventListener("load", this);
@@ -17,26 +19,34 @@ var Game = {
 
 				this.scheduler = new ROT.Scheduler.Speed();
 				this.engine = new ROT.Engine(this.scheduler);
-				this.display = new ROT.Display({fontSize:16});
+				//this.display = new ROT.Display({fontSize:16});
 				this.textBuffer = new TextBuffer(this.display);
-				document.body.appendChild(this.display.getContainer());
-				this.player = new Player();
-
-				/* FIXME build a level and position a player */
-				var level = new Level();
-				var size = level.getSize();
-				this._switchLevel(level);
-				this.level.setEntity(this.player, new XY(Math.round(size.x/2), Math.round(size.y/2)));
-
-				this.engine.start();
+				//document.body.appendChild(this.display.getContainer());
+				new Spritesheet('alloy.png', 12, 12, this.finalizeLoad.bind(this));
 			break;
 		}
+	},
+	
+	finalizeLoad: function(sheet) {
+	  this.sheet = sheet;
+		PixiDisplay.init(document.body, this.sheet);
+		this.player = new Player();
+
+		/* FIXME build a level and position a player */
+		var level = new Level();
+		var size = level.getSize();
+		this._switchLevel(level);
+		this.level.setEntity(this.player, new XY(Math.round(size.x/2), Math.round(size.y/2)));
+
+		this.engine.start();
 	},
 
 	draw: function(xy) {
 		var entity = this.level.getEntityAt(xy);
 		var visual = entity.getVisual();
-		this.display.draw(xy.x, xy.y, visual.ch, visual.fg, visual.bg);
+		//this.display.draw(xy.x, xy.y, visual.ch, visual.fg, visual.bg);
+		PixiDisplay.set(xy.x, xy.y, visual.ch, visual.fg, visual.bg);
+		PixiDisplay.draw();
 	},
 	
 	over: function() {
@@ -46,13 +56,13 @@ var Game = {
 
 	_switchLevel: function(level) {
 		/* remove old beings from the scheduler */
-		this.scheduler.clear(); 
+		this.scheduler.clear();
 
 		this.level = level;
 		var size = this.level.getSize();
 
 		var bufferSize = 3;
-		this.display.setOptions({width:size.x, height:size.y + bufferSize});
+		//this.display.setOptions({width:size.x, height:size.y + bufferSize});
 		this.textBuffer.configure({
 			display: this.display,
 			position: new XY(0, size.y),

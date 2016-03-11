@@ -28,10 +28,10 @@ TextBuffer.prototype.flush = function() {
 	/* clear */
 	for (var i=0;i<size.x;i++) {
 		for (var j=0;j<size.y;j++) {
-			d.draw(pos.x+i, pos.y+j);
+			//d.draw(pos.x+i, pos.y+j);
 		}
 	}
 
 	var text = this._data.join(" ");
-	d.drawText(pos.x, pos.y, text, size.x);
+	//d.drawText(pos.x, pos.y, text, size.x);
 }
