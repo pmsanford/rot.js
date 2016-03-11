@@ -20,7 +20,6 @@ var Game = {
 				this.scheduler = new ROT.Scheduler.Speed();
 				this.engine = new ROT.Engine(this.scheduler);
 				//this.display = new ROT.Display({fontSize:16});
-				this.textBuffer = new TextBuffer(this.display);
 				//document.body.appendChild(this.display.getContainer());
 				new Spritesheet('alloy.png', 12, 12, this.finalizeLoad.bind(this));
 			break;
@@ -30,6 +29,7 @@ var Game = {
 	finalizeLoad: function(sheet) {
 	  this.sheet = sheet;
 		PixiDisplay.init(document.body, this.sheet);
+		this.textBuffer = new TextBuffer(PixiDisplay);
 		this.player = new Player();
 
 		/* FIXME build a level and position a player */
@@ -64,7 +64,7 @@ var Game = {
 		var bufferSize = 3;
 		//this.display.setOptions({width:size.x, height:size.y + bufferSize});
 		this.textBuffer.configure({
-			display: this.display,
+			display: PixiDisplay,
 			position: new XY(0, size.y),
 			size: new XY(size.x, bufferSize)
 		});

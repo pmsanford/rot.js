@@ -7,7 +7,7 @@ var PixiDisplay = {
   init: function(parent, sheet) {
     this.stage = new PIXI.Container();
     this.sheet = sheet;
-    renderer = new PIXI.autoDetectRenderer(this._to_x(80), this._to_y(25), {"antialias": false});
+    renderer = new PIXI.autoDetectRenderer(this._to_x(80), this._to_y(28), {"antialias": false});
     parent.appendChild(renderer.view);
   },
   draw: function() {
@@ -15,10 +15,8 @@ var PixiDisplay = {
   },
   set: function(x, y, ch, fg, bg) {
     var spid = this._get_id(ch);
+    this.clear(x, y);
     var locstr = this._get_key(x, y);
-    if (this.sprites[locstr] !== undefined) {
-      this.stage.removeChild(this.sprites[locstr]);
-    }
     
     var tex = this.sheet.GetTexture(spid);
     var spr = new PIXI.Sprite(tex);
@@ -28,6 +26,26 @@ var PixiDisplay = {
     spr.position.y = this._to_y(y);
     this.stage.addChild(spr);
     this.sprites[locstr] = spr;
+  },
+  clear: function(x, y) {
+    var locstr = this._get_key(x, y);
+    if (this.sprites[locstr] !== undefined) {
+      this.stage.removeChild(this.sprites[locstr]);
+    }
+  },
+  
+  clearText: function() {
+    this.stage.removeChild(this._text);
+  },
+  
+  text: function(x, y, text) {
+    spr = new PIXI.Text(text, {'fill': 'red'});
+    spr.scale.x = this.scale;
+    spr.scale.y = this.scale;
+    spr.position.x = this._to_x(x);
+    spr.position.y = this._to_y(y);
+    this.stage.addChild(spr);
+    this._text = spr;
   },
   
   _get_key: function(x, y) {
